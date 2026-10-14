@@ -1,0 +1,91 @@
+# ==============================================================================
+# FILE PURPOSE: Configuration YAML specifying hyperparameter settings (learning rate,
+#               epochs, batch size, augmentations) and path inputs for HRNet model training.
+# INPUTS:       Loaded by model training script (train_hrnet.py)
+# PAPER SECTION: Methods - Section 2.4 (HRNet Model Architecture & Training Hyperparameters)
+# ==============================================================================
+
+GPUS: (0, )
+WORKERS: 6
+PRINT_FREQ: 20
+
+DATASET:
+  ROOT: '/home/blisc/Automation/datasets/train/images' # Training images directory
+  VAL_IMAGE_ROOT: '/home/blisc/Automation/datasets/val/images'
+  TRAINSET: '/home/blisc/Automation/datasets/train/annotations/Hindwing_train_data.json'
+  VALSET: '/home/blisc/Automation/datasets/val/annotations/Hindwing_val_data.json'
+  NUM_LANDMARKS: 12
+  FLIP: true
+  SCALE_FACTOR: 0.25
+  ROT_FACTOR: 30
+  PADDING: 1.0
+MODEL:
+  NAME: 'hrnet'
+  NUM_JOINTS: 12
+  INIT_WEIGHTS: true
+  PRETRAINED: '/home/blisc/Automation/models/Initial/hrnet_pre.pth' # <-- CORRECTED MODEL PATH
+  SIGMA: 1.5
+  IMAGE_SIZE:
+    - 256
+    - 256
+  HEATMAP_SIZE:
+    - 64
+    - 64
+  EXTRA:
+    FINAL_CONV_KERNEL: 1
+    STAGE2:
+      NUM_MODULES: 1
+      NUM_BRANCHES: 2
+      BLOCK: BASIC
+      NUM_BLOCKS:
+        - 4
+        - 4
+      NUM_CHANNELS:
+        - 18
+        - 36
+      FUSE_METHOD: SUM
+    STAGE3:
+      NUM_MODULES: 4
+      NUM_BRANCHES: 3
+      BLOCK: BASIC
+      NUM_BLOCKS:
+        - 4
+        - 4
+        - 4
+      NUM_CHANNELS:
+        - 18
+        - 36
+        - 72
+      FUSE_METHOD: SUM
+    STAGE4:
+      NUM_MODULES: 3
+      NUM_BRANCHES: 4
+      BLOCK: BASIC
+      NUM_BLOCKS:
+        - 4
+        - 4
+        - 4
+        - 4
+      NUM_CHANNELS:
+        - 18
+        - 36
+        - 72
+        - 144
+      FUSE_METHOD: SUM
+TRAIN:
+  BATCH_SIZE_PER_GPU: 8
+  SHUFFLE: true
+  BEGIN_EPOCH: 0
+  END_EPOCH: 80
+  RESUME: true
+  OPTIMIZER: 'adam'
+  LR: 0.0001
+  WD: 0.0
+  LR_STEP: [40, 55]
+  LR_FACTOR: 0.1
+  MOMENTUM: 0.0
+  NESTEROV: false
+  WARMUP_ITERS: 1
+  WARMUP_RATIO: 1.0
+VAL:
+  BATCH_SIZE_PER_GPU: 16

@@ -1,0 +1,94 @@
+# ==============================================================================
+# FILE PURPOSE: Configuration YAML specifying dataset paths, HRNet model architecture,
+#               image/heatmap dimensions, and batch sizes for HRNet inference/evaluation.
+# INPUTS:       Loaded by prediction and evaluation scripts (predict_hrnet.py)
+# PAPER SECTION: Methods - Section 2.4 (HRNet Model Inference Configuration)
+# ==============================================================================
+
+GPUS: (0, )
+WORKERS: 8
+PRINT_FREQ: 20
+
+DATASET:
+  ROOT: '/home/rcf/Automation/datasets/test/images/Geometrids' #Testing image directory
+  VAL_IMAGE_ROOT: '/home/rcf/Automation/datasets/val/images'
+  TRAINSET: '/home/rcf/Automation/datasets/train/annotations/Forewing_train_data_corrected.json'
+  VALSET: '/home/rcf/Automation/datasets/val/annotations/Forewing_val_data_corrected.json'
+  TESTSET: '/home/rcf/Automation/datasets/test/annotations/Forewing_Test_Geometrids_JSON.json'
+  NUM_LANDMARKS: 12
+  FLIP: true
+  SCALE_FACTOR: 0.10
+  ROT_FACTOR: 60
+  PADDING: 1.00
+MODEL:
+  NAME: 'hrnet'
+  NUM_JOINTS: 12
+  INIT_WEIGHTS: true
+  PRETRAINED: '/home/rcf/Automation/Forewing_TR8/Forewing_TR8_train_dirs/Hindwing/hrnet_train.yaml/epoch_10.pth' # <-- CORRECTED MODEL PATH
+  SIGMA: 1.0
+  IMAGE_SIZE:
+    - 256
+    - 256
+  HEATMAP_SIZE:
+    - 64
+    - 64
+  EXTRA:
+    FINAL_CONV_KERNEL: 1
+    STAGE2:
+      NUM_MODULES: 1
+      NUM_BRANCHES: 2
+      BLOCK: BASIC
+      NUM_BLOCKS:
+        - 4
+        - 4
+      NUM_CHANNELS:
+        - 18
+        - 36
+      FUSE_METHOD: SUM
+    STAGE3:
+      NUM_MODULES: 4
+      NUM_BRANCHES: 3
+      BLOCK: BASIC
+      NUM_BLOCKS:
+        - 4
+        - 4
+        - 4
+      NUM_CHANNELS:
+        - 18
+        - 36
+        - 72
+      FUSE_METHOD: SUM
+    STAGE4:
+      NUM_MODULES: 3
+      NUM_BRANCHES: 4
+      BLOCK: BASIC
+      NUM_BLOCKS:
+        - 4
+        - 4
+        - 4
+        - 4
+      NUM_CHANNELS:
+        - 18
+        - 36
+        - 72
+        - 144
+      FUSE_METHOD: SUM
+TRAIN:
+  BATCH_SIZE_PER_GPU: 32
+  SHUFFLE: true
+  BEGIN_EPOCH: 0
+  END_EPOCH: 200
+  RESUME: true
+  OPTIMIZER: 'adam'
+  LR: 0.002
+  WD: 0.0001
+  LR_STEP: [40, 55]
+  LR_FACTOR: 0.1
+  MOMENTUM: 0.0
+  NESTEROV: false
+  WARMUP_ITERS: 500
+  WARMUP_RATIO: 0.001
+VAL:
+  BATCH_SIZE_PER_GPU: 64
+TEST:
+  BATCH_SIZE_PER_GPU: 16

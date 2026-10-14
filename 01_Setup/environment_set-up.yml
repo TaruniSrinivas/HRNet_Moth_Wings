@@ -1,0 +1,31 @@
+# ==============================================================================
+# FILE PURPOSE: Conda environment definition file listing required Python packages,
+#               PyTorch CUDA builds, and pip dependencies needed to run the codebase.
+# USAGE:        conda env create -f environment_set-up.yml
+# PAPER SECTION: Reproducibility & Software Environment
+# ==============================================================================
+
+name: hrnet_env
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=12.1
+  - scikit-image
+  - numpy
+  - pandas
+  - libtiff=4.4.0
+  - opencv
+  - pip
+  - pip:
+      - yacs
+      - tensorboardX
+      - tensorboard
+      - pycocotools
+      - Pillow
