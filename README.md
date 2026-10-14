@@ -1,3 +1,26 @@
+# HRNet_Moth_Wings
+
+This repository contains the setup configurations, TPS metadata handling, image processing, CSV format conversion, HRNet model training, inference, and post-processing scripts used for landmark detection on moth forewings and hindwings.
+
+---
+
+## Repository Structure
+
+```text
+.
+├── 01_Setup/                  # Environment configuration (.yml) and HRNet configuration files (.yaml)
+├── 02_TPS_Processing/         # TPS metadata cleaning, scale extraction, and dataset pruning
+├── 03_Image_Processing/       # Specimen image cropping based on landmark bounding boxes
+├── 04_CSV_Operations/         # Dataset merging, splitting, and COCO JSON conversion
+├── 05_ML_Models/              # HRNet model architecture, dataset class, training, and inference
+└── 06_Post_Processing/        # Exporting predictions to TPS format and generating overlay visual checks
+```
+
+## Execution Guide
+
+To reproduce the analysis, execute the scripts in numerical order according to your data preparation and model pipeline needs:
+
+```bash
 # Environment Setup
 conda env create -f 01_Setup/environment_set-up.yml
 conda activate hrnet_env
@@ -34,3 +57,4 @@ python 06_Post_Processing/convert_predicted_landmarks_csv_to_tps.py
 
 # Generate comparison plots (Machine vs. Human landmarks)
 python 06_Post_Processing/overlay_machine_vs_human_landmarks.py
+```
