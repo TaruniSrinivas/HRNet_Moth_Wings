@@ -218,3 +218,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Custom Project Data & Output Ignores
+data/
+output/
+train_dirs/
+predict_dirs/
+*.pth
+*.tar
